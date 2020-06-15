@@ -39,7 +39,7 @@ docker-compose exec web python manage.py makemigrations
 If you're not running the docker-compose project in the moment, just change, you can use of this command
 
 ``` bash
-docker-compose run --rm -it web <command>
+docker-compose run web <command>
 ```
 
 Just like the before one, but changing 'exec' with 'run' and adding the --rm flag to delete container on finish
