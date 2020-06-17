@@ -2,6 +2,8 @@
 
 # Django
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
 # Custom model
 from users.models import Profile
@@ -30,3 +32,49 @@ class ProfileAdmin(admin.ModelAdmin):
         'created',
         'modified'
     )
+
+    """
+    List of categories with chich we'll create a 'Profile'
+
+    It's a tuple of tuples. Each tuple must have as key the name of category
+    that we'll assign to it. As value, a tuple with the fields to add.
+    """
+    fieldsets = (
+        ('Profile', {
+            'fields': (('user', 'picture'), ) # Rendered side by side
+        }),
+        ('Contact data', {
+            'fields': ('phone_number', 'website', 'biography') # Rendered one below other
+        }),
+        ('Metadata', {
+            'fields': (('created', 'modified'),)
+        })
+    )
+
+    readonly_fields = ('created', 'modified')
+
+
+class ProfileInline(admin.StackedInline):
+    """Extending User on admin to edit User and Profile in-same-view."""
+
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'profiles'
+
+class UserAdmin(BaseUserAdmin):
+    """Overriding user admin's model with our own."""
+
+    inlines = (ProfileInline,)
+    list_display = (
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'is_active',
+        'is_staff',
+        'is_superuser'
+    )
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
