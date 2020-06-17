@@ -1,20 +1,22 @@
 """Posts models."""
 
+# Django
 from django.db import models
+from django.contrib.auth.models import User
 
-class User(models.Model):
-    """User model just for DB learning purposes."""
 
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
+class Post(models.Model):
+    """Post model"""
 
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey('users.Profile', on_delete=models.CASCADE)
 
-    bio = models.TextField(blank=True)
-    birthdate = models.DateField(blank=True, null=True)
+    title = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='posts/photos')
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.email
+        """Return title and username"""
+        return '{} by @{}'.format(self.title, self.user.username)
