@@ -5,12 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+# Exception
+from django.db.utils import IntegrityError
+
 # Models
 from django.contrib.auth.models import User
 from users.models import Profile
-
-# Exception
-from django.db.utils import IntegrityError
 
 def login_view(request):
     """Login view."""
@@ -58,3 +58,7 @@ def logout_view(request):
     """Logout from application."""
     logout(request)
     return redirect('login')
+
+def update_profile(request):
+    """Update a user's profile"""
+    return render(request, 'users/update_profile.html')
